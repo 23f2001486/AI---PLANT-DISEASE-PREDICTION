@@ -13,7 +13,7 @@ import gc
 
 
 
-# 1️⃣ Common Settings
+# 1️ Common Settings
 # ====================================================
 data_dir = r"C:\Users\divya\Downloads\Betel Leaf Dataset\Betel Leaf Dataset\Original_Dataset"
 img_size = (224, 224)
@@ -21,7 +21,7 @@ batch_size = 8  # reduced from 32
 epochs = 5
 val_split = 0.2
 
-# ✅ Prevent TensorFlow from allocating all GPU memory
+#  Prevent TensorFlow from allocating all GPU memory
 gpus = tf.config.experimental.list_physical_devices('GPU')
 if gpus:
     try:
@@ -31,7 +31,7 @@ if gpus:
         print(e)
 
 # ====================================================
-# 2️⃣ Validation Generator (fixed)
+# 2️ Validation Generator (fixed)
 # ====================================================
 base_datagen = ImageDataGenerator(rescale=1./255, validation_split=val_split)
 val_generator = base_datagen.flow_from_directory(
@@ -43,7 +43,7 @@ val_generator = base_datagen.flow_from_directory(
 )
 
 # ====================================================
-# 3️⃣ Helper Function (Memory-Efficient)
+# 3️ Helper Function (Memory-Efficient)
 # ====================================================
 def build_and_train(model_type, augment=True, transfer=True, dropout=True, img_resize=(224,224), epochs=5):
     print(f"\n🔹 Training: {model_type}")
@@ -103,7 +103,7 @@ def build_and_train(model_type, augment=True, transfer=True, dropout=True, img_r
 
     print(f" {model_type}: {val_acc*100:.2f}% | Time: {train_time} min")
 
-    # ✅ Clear memory
+    # Clear memory
     tf.keras.backend.clear_session()
     del model, base_model, train_generator, val_generator
     gc.collect()
@@ -112,7 +112,7 @@ def build_and_train(model_type, augment=True, transfer=True, dropout=True, img_r
 
 
 # ====================================================
-# 4️⃣ Run Ablation Variants
+# 4️ Run Ablation Variants
 # ====================================================
 results = []
 
@@ -130,7 +130,7 @@ for cfg in configs:
 
 
 # ====================================================
-# 5️⃣ Display Table
+# 5️ Display Table
 # ====================================================
 df = pd.DataFrame(results, columns=["Configuration", "Accuracy", "Training Time (min)"])
 df["Performance Drop"] = df["Accuracy"].max() - df["Accuracy"]
@@ -139,7 +139,7 @@ print("\n==================== ABLATION STUDY RESULTS ====================")
 print(df.to_string(index=False))
 
 # ====================================================
-# 6️⃣ Visualize
+# 6️ Visualize
 # ====================================================
 plt.figure(figsize=(10,5))
 plt.bar(df["Configuration"], df["Accuracy"], color=['green'] + ['red']*(len(df)-1))
